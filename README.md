@@ -94,6 +94,15 @@ function App() {
 }
 ```
 
+## APIs
+
+- `dialog.alert` : async (text, options?) => boolean
+  > Generally it would returns `true`, but if `stubborn` is set to `false` and the dialog is closed by clicking the
+  > background, it would return `false`
+- `dialog.confirm` : async (text, options?) => boolean
+- `dialog.prompt` : async (text, options?) => string | null
+  > If the user **confirm** or **submit** the dialog, it returns a `string`, otherwise it returns `null`
+
 ## Options
 
 The following options can be passed into `Dialog`, `DialogProvider` as the props, or `dialog.alert`, `dialog.confirm`,
