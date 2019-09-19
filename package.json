@@ -1,0 +1,26 @@
+{
+  "name": "react-bootstrap-easy-dialog",
+  "version": "0.0.0-dev.0",
+  "description": "React Bootstrap Dialog made easy",
+  "keywords": [
+    "react-bootstrap",
+    "modal",
+    "dialog"
+  ],
+  "main": "lib/Dialog.js",
+  "scripts": {
+    "build": "babel src -d lib"
+  },
+  "author": "zhaoyao91 <zhaoyao91@aliyun.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.3",
+    "react-bootstrap": "^1.0.0"
+  }
+}
