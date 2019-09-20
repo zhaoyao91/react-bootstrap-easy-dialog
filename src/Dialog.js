@@ -168,7 +168,9 @@ export function DialogUI({
     if (show && input && autoFocus) {
       inputRef.current.focus();
       if (autoFocus === "select") {
-        inputRef.current.select();
+        setImmediate(() => {
+          inputRef.current && inputRef.current.select();
+        });
       }
     }
   }, [show, input, autoFocus]);
