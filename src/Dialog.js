@@ -1,4 +1,4 @@
-// 做好拿去发布噢
+// 做的好拿去发布噢
 
 import React, {
   createContext,
@@ -28,6 +28,7 @@ export function DialogProvider({ children, ...options }) {
   }, []);
 
   function handleExited() {
+    setShowOptions({});
     exitedRef.current = true;
   }
 
@@ -104,10 +105,10 @@ export function DialogProvider({ children, ...options }) {
   };
 
   // 当 animation === false 的时候，onExited 不会触发
-  // 因此，当 show 变成 false 的时候直接设置 exited 标志位
+  // 因此，当 show 变成 false 的时候，认为 exited 完成
   useEffect(() => {
     if (!show && mergedOptions.animation === false) {
-      exitedRef.current = true;
+      handleExited();
     }
   }, [show, mergedOptions.animation]);
 
