@@ -71,7 +71,7 @@ function App() {
 }
 ```
 
-### Context Style
+### Context style
 
 ```js
 import { DialogProvider, DialogConsumer } from "react-bootstrap-easy-dialog";
@@ -108,7 +108,7 @@ function App() {
 ## Options
 
 The following options can be passed into `Dialog`, `DialogProvider` as the props, or `dialog.alert`, `dialog.confirm`,
-`dialog.prompt` as the second arguments.
+`dialog.prompt` as the second argument.
 
 - `title`? : string
 - `inputProps`? : object // options passed into the underlining [Form.Control](https://react-bootstrap.github.io/components/forms/#form-control-props)
