@@ -1,5 +1,3 @@
-// 做的好拿去发布噢
-
 import React, {
   createContext,
   useContext,
@@ -20,7 +18,7 @@ export function DialogProvider({ children, ...options }) {
   const exitedRef = useRef(true);
   const cancelRef = useRef();
 
-  // unmount 的时候，如果还有 dialog 开着，启动它的正常 cancel 流程
+  // when unmount, if some dialog is still open, trigger its canceling process
   useEffect(() => {
     return () => {
       cancelRef.current && cancelRef.current();
@@ -35,7 +33,7 @@ export function DialogProvider({ children, ...options }) {
   const dialog = useMemo(() => {
     function buildMethod(buildOptions, failValue) {
       return async (text, options) => {
-        // 上一次对话尚未结束，调用失败
+        // if the previous dialog is not exited, fails
         if (exitedRef.current === false) return failValue;
 
         return new Promise(resolve => {
@@ -104,8 +102,8 @@ export function DialogProvider({ children, ...options }) {
     onExited: handleExited
   };
 
-  // 当 animation === false 的时候，onExited 不会触发
-  // 因此，当 show 变成 false 的时候，认为 exited 完成
+  // if animation === false, the onExited will not get triggered
+  // so, when show turned into false, it is considered as exited
   useEffect(() => {
     if (!show && mergedOptions.animation === false) {
       handleExited();
@@ -155,15 +153,26 @@ export function DialogUI({
   size
 }) {
   const { defaultValue = "", refKey = "ref", ...otherInputProps } =
-    inputProps || {};
+  inputProps || {};
 
-  const [inputValue, setInputValue] = useState(defaultValue);
+  const [inputValue, setInputValue] = useState("");
   const inputRef = useRef();
 
+  // only set input value to default value when it shows up
   useEffect(() => {
-    setInputValue(defaultValue);
-  }, [defaultValue]);
+    if (show) {
+      setInputValue(defaultValue);
+    }
+  }, [show, defaultValue]);
 
+  // if it is closed without animation, clear the input directly
+  useEffect(() => {
+    if (!show && animation === false) {
+      setInputValue("");
+    }
+  }, [show, animation]);
+
+  // set autoFocus properly
   useEffect(() => {
     if (show && input && autoFocus) {
       inputRef.current.focus();
@@ -201,12 +210,18 @@ export function DialogUI({
     setInputValue(e.target.value);
   }
 
+  function handleExited() {
+    // clear the input value on finish of the animation
+    setInputValue("");
+    onExited();
+  }
+
   return (
     <Modal
       show={show}
       onHide={handleHide}
       centered={centered}
-      onExited={onExited}
+      onExited={handleExited}
       animation={animation}
       scrollable={scrollable}
       size={size}
