@@ -7,9 +7,9 @@ React Bootstrap Dialog made easy!
 Based on [react-bootstrap modal](https://react-bootstrap.github.io/components/modal/), this package created a set of apis,
 which are similar to the standard `window.alert`, `window.confirm` and `window.prompt`, which cover 80% of dialog usage.
 
-## Demo and Usage
+## Demo
 
-[Demo and usage.](https://codesandbox.io/s/react-boostrap-easy-dialog-4zkcv)
+[Demo](https://codesandbox.io/s/react-boostrap-easy-dialog-4zkcv)
 
 ## Installation
 
@@ -121,7 +121,7 @@ The following options can be passed into `Dialog`, `DialogProvider` as the props
 
 ## Advanced Usage
 
-see [demo and usage.](#demo-and-usage)
+See [Demo](#demo).
 
 ### License
 
