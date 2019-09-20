@@ -145,15 +145,14 @@ export function DialogUI({
   onConfirm, // (inputValue) => void
   onCancel, // () => void
   onExited, // () => void
-  autoFocus = "select", // boolean | 'select'
-  stubborn = true, // boolean?
-  centered = true, // boolean?
-  animation = true,
-  scrollable,
-  size
+  autoFocus = "select", // boolean | 'select' ?
+  stubborn = false, // boolean?
+  centered = false, // boolean?
+  animation = true, // boolean?
+  size = "" // string?
 }) {
   const { defaultValue = "", refKey = "ref", ...otherInputProps } =
-  inputProps || {};
+    inputProps || {};
 
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef();
@@ -198,7 +197,7 @@ export function DialogUI({
 
   function handleHide() {
     if (!stubborn) {
-      onCancel();
+      handleCancel();
     }
   }
 
@@ -223,7 +222,6 @@ export function DialogUI({
       centered={centered}
       onExited={handleExited}
       animation={animation}
-      scrollable={scrollable}
       size={size}
     >
       {showHeader && (

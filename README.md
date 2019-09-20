@@ -115,11 +115,10 @@ The following options can be passed into `Dialog`, `DialogProvider` as the props
 - `cancelButtonProps`? : object // options passed into the underlining [Button](https://react-bootstrap.github.io/components/buttons/#button-props)
 - `confirmButtonProps`? : object // options passed into the underlining [Button](https://react-bootstrap.github.io/components/buttons/#button-props)
 - `autoFocus` = 'select' : boolean | 'select'
-- `stubborn` = true : boolean // if true, clicking the background would not trigger canceling
-- `centered` = true : boolean // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
+- `stubborn` = false : boolean // if true, clicking the background would not trigger canceling
+- `centered` = false : boolean // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
 - `animation` = true : boolean // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
-- `scrollable`? : boolean // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
-- `size`? : string // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
+- `size` = '' : string // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
 
 ## Advanced Usage
 
