@@ -11,7 +11,7 @@ which are similar to the standard `window.alert`, `window.confirm` and `window.p
 
 [Demo](https://codesandbox.io/s/react-boostrap-easy-dialog-4zkcv)
 
-![demo](https://user-images.githubusercontent.com/3808838/65293160-dd869580-db8c-11e9-8a2c-271a4c3504f2.gif)
+![demo](https://user-images.githubusercontent.com/3808838/65297097-4ffd7280-db99-11e9-9aaf-bc421c9ec361.gif)
 
 ## Installation
 
