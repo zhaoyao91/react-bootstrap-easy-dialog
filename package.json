@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-easy-dialog",
-  "version": "0.0.0-dev.1",
+  "version": "0.0.0-dev.2",
   "description": "React Bootstrap Dialog made easy",
   "keywords": [
     "react-bootstrap",
@@ -9,7 +9,8 @@
   ],
   "main": "lib/Dialog.js",
   "scripts": {
-    "build": "babel src -d lib"
+    "build": "babel src -d lib",
+    "prepublish": "npm run build"
   },
   "author": "zhaoyao91 <zhaoyao91@aliyun.com>",
   "license": "MIT",
