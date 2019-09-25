@@ -16,6 +16,7 @@ export function DialogProvider({ children, ...providerOptions }) {
   const [show, setShow] = useState(false);
   const [showOptions, setShowOptions] = useState({});
   const [hidden, setHidden] = useState(true);
+  const hiddenRef = useRef(hidden);
   const previousHiddenRef = useRef(hidden);
   const resolveDoneRef = useRef(null);
   const resolveHiddenRef = useRef(null);
@@ -44,6 +45,7 @@ export function DialogProvider({ children, ...providerOptions }) {
   }
 
   useEffect(() => {
+    hiddenRef.current = hidden;
     const previousHidden = previousHiddenRef.current;
     previousHiddenRef.current = hidden;
     if (previousHidden === false && hidden === true) {
@@ -54,7 +56,7 @@ export function DialogProvider({ children, ...providerOptions }) {
   const dialog = useMemo(() => {
     function buildMethod(methodOptions, failValue, okValue) {
       return function(text, userOptions) {
-        if (!hidden) return failValue;
+        if (!hiddenRef.current) return failValue;
 
         setShow(true);
         setHidden(false);
