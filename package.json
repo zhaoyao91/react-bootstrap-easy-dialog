@@ -1,13 +1,13 @@
 {
   "name": "react-bootstrap-easy-dialog",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "React Bootstrap Dialog made easy",
   "keywords": [
     "react-bootstrap",
     "modal",
     "dialog"
   ],
-  "main": "lib/Dialog.js",
+  "main": "dist/Dialog.js",
   "scripts": {
     "clean": "shx rm -rf dist",
     "prebuild": "npm run clean",
