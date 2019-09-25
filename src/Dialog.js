@@ -12,103 +12,115 @@ import Form from "react-bootstrap/Form";
 
 export const DialogContext = createContext(null);
 
-export function DialogProvider({ children, ...options }) {
-  const [showOptions, setShowOptions] = useState({});
+export function DialogProvider({ children, ...providerOptions }) {
   const [show, setShow] = useState(false);
-  const exitedRef = useRef(true);
-  const cancelRef = useRef();
+  const [showOptions, setShowOptions] = useState({});
+  const [hidden, setHidden] = useState(true);
+  const previousHiddenRef = useRef(hidden);
+  const resolveDoneRef = useRef(null);
+  const resolveHiddenRef = useRef(null);
+  const doneResultRef = useRef();
 
-  // when unmount, if some dialog is still open, trigger its canceling process
-  useEffect(() => {
-    return () => {
-      cancelRef.current && cancelRef.current();
-    };
-  }, []);
+  const mergedOptions = {
+    ...providerOptions,
+    ...showOptions,
+    show
+  };
 
-  function handleExited() {
-    setShowOptions({});
-    exitedRef.current = true;
+  function resolveDone(result) {
+    if (resolveDoneRef.current) {
+      resolveDoneRef.current(result);
+      resolveDoneRef.current = null;
+      doneResultRef.current = result;
+    }
   }
 
+  function resolveHidden() {
+    if (resolveHiddenRef.current) {
+      resolveHiddenRef.current(doneResultRef.current);
+      resolveHiddenRef.current = null;
+      doneResultRef.current = undefined;
+    }
+  }
+
+  useEffect(() => {
+    const previousHidden = previousHiddenRef.current;
+    previousHiddenRef.current = hidden;
+    if (previousHidden === false && hidden === true) {
+      resolveHidden();
+    }
+  }, [hidden]);
+
   const dialog = useMemo(() => {
-    function buildMethod(buildOptions, failValue) {
-      return async (text, options) => {
-        // if the previous dialog is not exited, fails
-        if (exitedRef.current === false) return failValue;
+    function buildMethod(methodOptions, failValue, okValue) {
+      return function(text, userOptions) {
+        if (!hidden) return failValue;
 
-        return new Promise(resolve => {
-          setShow(true);
-          exitedRef.current = false;
+        setShow(true);
+        setHidden(false);
 
-          function done(result) {
+        setShowOptions({
+          ...methodOptions,
+          ...userOptions,
+          text,
+          onCancel() {
             setShow(false);
-            cancelRef.current = null;
-            resolve(result);
+            resolveDone(failValue);
+          },
+          onConfirm(result) {
+            setShow(false);
+            resolveDone(okValue === undefined ? result : okValue);
+          },
+          onExited() {
+            setShowOptions({});
+            setHidden(true);
           }
-
-          const finalOptions = buildOptions(done);
-
-          cancelRef.current = finalOptions.onCancel;
-
-          setShowOptions({
-            text,
-            ...options,
-            ...finalOptions
-          });
         });
+
+        const donePromise = new Promise(resolve => {
+          resolveDoneRef.current = resolve;
+        });
+        donePromise.done = donePromise;
+        donePromise.hidden = new Promise(resolve => {
+          resolveHiddenRef.current = resolve;
+        });
+
+        return donePromise;
       };
     }
 
     return {
       alert: buildMethod(
-        done => ({
+        {
           input: false,
           cancelButton: false,
-          confirmButton: true,
-          onCancel: () => done(false),
-          onConfirm: () => done(true)
-        }),
-        false
+          confirmButton: true
+        },
+        false,
+        true
       ),
 
       confirm: buildMethod(
-        done => ({
+        {
           input: false,
           cancelButton: true,
-          confirmButton: true,
-          onCancel: () => done(false),
-          onConfirm: () => done(true)
-        }),
-        false
+          confirmButton: true
+        },
+        false,
+        true
       ),
 
       prompt: buildMethod(
-        done => ({
+        {
           input: true,
           cancelButton: true,
-          confirmButton: true,
-          onCancel: () => done(null),
-          onConfirm: inputValue => done(inputValue)
-        }),
-        null
+          confirmButton: true
+        },
+        null,
+        undefined
       )
     };
   }, []);
-
-  const mergedOptions = {
-    ...options,
-    ...showOptions,
-    show,
-    onExited: handleExited
-  };
-
-  // if animation === false, the onExited will not get triggered
-  // so, when show turned into false, it is considered as exited
-  useEffect(() => {
-    if (!show && mergedOptions.animation === false) {
-      handleExited();
-    }
-  }, [show, mergedOptions.animation]);
 
   return (
     <DialogContext.Provider value={dialog}>
@@ -146,13 +158,10 @@ export function DialogUI({
   onCancel, // () => void
   onExited, // () => void
   autoFocus = "select", // boolean | 'select' ?
-  stubborn = false, // boolean?
-  centered = false, // boolean?
-  animation = true, // boolean?
-  size = "" // string?
+  stubborn = false // boolean?
 }) {
   const { defaultValue = "", refKey = "ref", ...otherInputProps } =
-    inputProps || {};
+  inputProps || {};
 
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef();
@@ -163,13 +172,6 @@ export function DialogUI({
       setInputValue(defaultValue);
     }
   }, [show, defaultValue]);
-
-  // if it is closed without animation, clear the input directly
-  useEffect(() => {
-    if (!show && animation === false) {
-      setInputValue("");
-    }
-  }, [show, animation]);
 
   // set autoFocus properly
   useEffect(() => {
@@ -216,14 +218,7 @@ export function DialogUI({
   }
 
   return (
-    <Modal
-      show={show}
-      onHide={handleHide}
-      centered={centered}
-      onExited={handleExited}
-      animation={animation}
-      size={size}
-    >
+    <Modal show={show} onHide={handleHide} onExited={handleExited}>
       {showHeader && (
         <Modal.Header>
           <Modal.Title>{title}</Modal.Title>

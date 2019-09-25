@@ -96,6 +96,20 @@ function App() {
 }
 ```
 
+## Advanced Usage
+
+### Wait until hidden
+
+Generally, dialog would return as soon as canceling or confirming gets triggered, by this time, the dialog is still in
+the animation, so calling another dialog would fail directly.
+
+However, you can explicitly wait until it gets hidden completely.
+
+```js
+const confirmed = await dialog.confirm('Delete your home?').hidden; // it would resolve after the dialog is completely hidden
+const inputName = await dialog.prompt('Confirm the home name'); // or await dialog.prompt(...).done
+```
+
 ## APIs
 
 - `dialog.alert` : async (text, options?) => boolean
@@ -116,9 +130,6 @@ The following options can be passed into `Dialog`, `DialogProvider` as the props
 - `confirmButtonProps`? : object // options passed into the underlining [Button](https://react-bootstrap.github.io/components/buttons/#button-props)
 - `autoFocus` = 'select' : boolean | 'select'
 - `stubborn` = false : boolean // if true, clicking the background would not trigger canceling
-- `centered` = false : boolean // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
-- `animation` = true : boolean // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
-- `size` = '' : string // see [Modal](https://react-bootstrap.github.io/components/modal/#modal-props)
 
 ## Advanced Usage
 
