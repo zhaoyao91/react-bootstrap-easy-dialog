@@ -167,6 +167,7 @@ export function DialogUI({
 
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef();
+  const submitButtonRef = useRef();
 
   // only set input value to default value when it shows up
   useEffect(() => {
@@ -196,7 +197,11 @@ export function DialogUI({
   }
 
   function handleConfirm() {
-    onConfirm(inputValue);
+    if (submitButtonRef.current) {
+      submitButtonRef.current.click();
+    } else {
+      onConfirm();
+    }
   }
 
   function handleHide() {
@@ -233,14 +238,15 @@ export function DialogUI({
           )}
           {input && (
             <Form onSubmit={handleSubmit}>
-              {input && (
-                <Form.Control
-                  {...otherInputProps}
-                  value={inputValue}
-                  onChange={handleInputValueChange}
-                  {...{ [refKey]: inputRef }}
-                />
-              )}
+              <Form.Control
+                {...otherInputProps}
+                value={inputValue}
+                onChange={handleInputValueChange}
+                {...{ [refKey]: inputRef }}
+              />
+              <Button type="submit" hidden ref={submitButtonRef}>
+                Submit
+              </Button>
             </Form>
           )}
         </Modal.Body>
